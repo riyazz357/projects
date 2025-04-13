@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Notes - IOE/CEE Prep</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .class-selector {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .chapter-card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .chapter-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+        }
+        
+        .chapter-content {
+            padding: 1.5rem;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .note-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: all 0.2s ease;
+        }
+        
+        .note-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .note-item:last-child {
+            border-bottom: none;
+        }
+        
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <!-- Class Selection (Shows First) -->
+        <div id="classSelection" class="class-selector text-center">
+            <h3 class="mb-4"><i class="fas fa-graduation-cap me-2"></i>Select Your Class</h3>
+            <div class="d-grid gap-3">
+                <button class="btn btn-primary btn-lg py-3 class-select" data-class="11">
+                    <i class="fas fa-arrow-circle-right me-2"></i>Class 11
+                </button>
+                <button class="btn btn-primary btn-lg py-3 class-select" data-class="12">
+                    <i class="fas fa-arrow-circle-right me-2"></i>Class 12
+                </button>
+            </div>
+        </div>
+        
+        <!-- Subject Content (Hidden Initially) -->
+        <div id="subjectContent" style="display: none;">
+            <div class="text-center mb-5">
+                <h2 id="subjectTitle" class="fw-bold"></h2>
+                <p id="classIndicator" class="text-muted"></p>
+            </div>
+            
+            <div id="chaptersContainer">
+                <!-- Chapters will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <a href="index.html" class="btn btn-primary back-button rounded-circle shadow" style="display: none;">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get subject from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const subject = urlParams.get('subject');
+        
+        // Sample data structure (in real app, fetch from Firebase)
+        const subjectData = {
+            physics: {
+                name: "Physics",
+                class11: {
+                    chapters: [
+                        {
+                            name: "Unit 1: Mechanics",
+                            notes: [
+                                { title: "Introduction to Mechanics", type: "pdf", url: "notes/physics/11/mechanics-intro.pdf" },
+                                { title: "Newton's Laws of Motion", type: "video", url: "https://youtube.com/embed/xyz" },
+                                { title: "Formula Sheet", type: "pdf", url: "notes/physics/11/mechanics-formulas.pdf" }
+                            ]
+                        },
+                        // More chapters...
+                    ]
+                },
+                class12: {
+                    chapters: [
+                        // Class 12 chapters...
+                    ]
+                }
+            },
+            // Other subjects...
+        };
+        
+        // Class selection handler
+        document.querySelectorAll('.class-select').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedClass = this.getAttribute('data-class');
+                showSubjectContent(selectedClass);
+            });
+        });
+        
+        function showSubjectContent(selectedClass) {
+            // Hide class selector
+            document.getElementById('classSelection').style.display = 'none';
+            
+            // Show subject content
+            document.getElementById('subjectContent').style.display = 'block';
+            document.querySelector('.back-button').style.display = 'block';
+            
+            // Set titles
+            document.getElementById('subjectTitle').textContent = subjectData[subject].name;
+            document.getElementById('classIndicator').textContent = `Class ${selectedClass} Study Materials`;
+            
+            // Load chapters
+            const chaptersContainer = document.getElementById('chaptersContainer');
+            chaptersContainer.innerHTML = '';
+            
+            const chapters = subjectData[subject][`class${selectedClass}`].chapters;
+            
+            chapters.forEach(chapter => {
+                const chapterHTML = `
+                    <div class="chapter-card">
+                        <div class="chapter-header" data-bs-toggle="collapse" data-bs-target="#chapter-${chapter.name.replace(/\s+/g, '-')}">
+                            <h5 class="mb-0">
+                                <i class="fas fa-book-open me-2"></i>${chapter.name}
+                            </h5>
+                        </div>
+                        <div class="collapse" id="chapter-${chapter.name.replace(/\s+/g, '-')}">
+                            <div class="chapter-content">
+                                ${chapter.notes.map(note => `
+                                    <div class="note-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas ${note.type === 'pdf' ? 'fa-file-pdf text-danger' : 'fa-video text-primary'} me-2"></i>
+                                                <strong>${note.title}</strong>
+                                            </div>
+                                            <a href="${note.url}" class="btn btn-sm ${note.type === 'pdf' ? 'btn-outline-danger' : 'btn-outline-primary'}" target="_blank">
+                                                ${note.type === 'pdf' ? 'Download' : 'Watch'} <i class="fas fa-arrow-right ms-1"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                chaptersContainer.innerHTML += chapterHTML;
+            });
+        }
+        
+        // Initialize - if subject not specified, redirect
+        if (!subject || !subjectData[subject]) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<div class="container mt-5">
+    <h2 class="mb-4">Add New Question</h2>
+    <form id="questionForm">
+        <div class="mb-3">
+            <label class="form-label">Select Mock Test</label>
+            <select id="testSelect" class="form-select" required>
+                <!-- Options will be loaded via JavaScript -->
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Question Text</label>
+            <textarea id="questionText" class="form-control" rows="3" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Options (Mark correct answer with *)</label>
+            <div id="optionsContainer">
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control option-input" placeholder="Option 1" required>
+                    <button type="button" class="btn btn-outline-danger remove-option">×</button>
+                </div>
+            </div>
+            <button type="button" id="addOption" class="btn btn-sm btn-primary mt-2">+ Add Option</button>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Explanation</label>
+            <textarea id="explanation" class="form-control" rows="2"></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Difficulty</label>
+            <select id="difficulty" class="form-select">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Save Question</button>
+    </form>
+</div>

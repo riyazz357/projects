@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        /* Admin-specific styles */
+body.admin-mode {
+    background-color: #f8f9fa;
+}
+
+.navbar-admin {
+    background: linear-gradient(135deg, #3a0ca3, #4361ee);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.admin-tabs {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+}
+
+.btn-admin {
+    background: #4cc9f0;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+}
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="../css/admin.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <h1><i class="fas fa-lock"></i> Admin Panel</h1>
+        <div class="admin-nav">
+            <a href="questions/add.html" class="btn btn-admin">
+                <i class="fas fa-plus-circle"></i> Add Questions
+            </a>
+            <a href="questions/list.html" class="btn btn-admin">
+                <i class="fas fa-list"></i> Manage Questions
+            </a>
+        </div>
+    </div>
+    
+    <script src="../js/admin/authh.js"></script>
+</body>
+</html>
